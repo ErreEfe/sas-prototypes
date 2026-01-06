@@ -1,0 +1,5 @@
+{
+  "name": "SAS Connect",
+  "description": "Una aplicación web diseñada para facilitar la gestión y consulta de prestaciones médicas. Proporciona una interfaz segura y eficiente para que los usuarios autorizados puedan buscar, filtrar y visualizar el estado de diversas solicitudes, mejorando la trazabilidad y la organización de los procesos administrativos.",
+  "requestFramePermissions": []
+}
