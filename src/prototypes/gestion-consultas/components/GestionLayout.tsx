@@ -6,9 +6,7 @@ import { Header } from '@/core/components/Header';
 import { Briefcase, Inbox, FileBarChart } from 'lucide-react';
 
 const MENU_ITEMS: SidebarItem[] = [
-    { name: 'Bandeja General', path: '/gestion-consultas', icon: Inbox },
-    { name: 'Mis Casos', path: '/gestion-consultas/mis-casos', icon: Briefcase },
-    { name: 'Reportes', path: '/gestion-consultas/reportes', icon: FileBarChart },
+    { name: 'Gestión de Consultas y Reclamos', path: '/gestion-consultas', icon: Inbox },
 ];
 
 export const GestionLayout = () => {

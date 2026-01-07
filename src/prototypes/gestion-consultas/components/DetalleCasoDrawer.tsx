@@ -88,125 +88,137 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
             footerContent={footer}
             className="w-full sm:max-w-xl" // Make it a bit wider than default if possible
         >
-            <div className="space-y-6 px-1">
+            <div className="space-y-8 px-6 py-4">
                 {/* Header Info */}
-                <div className="flex flex-col gap-2 pb-4 border-b">
+                <div className="flex flex-col gap-3 pb-6 border-b">
                     <div className="flex items-center justify-between">
-                        <Badge variant={getStatusBadgeVariant(caso.estado)} className="text-xs">
+                        <Badge variant={getStatusBadgeVariant(caso.estado)} className="text-xs px-2.5 py-0.5">
                             {caso.estado.replace('_', ' ')}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">{new Date(caso.fechaIngreso).toLocaleString()}</span>
+                        <span className="text-xs text-muted-foreground font-medium">{new Date(caso.fechaIngreso).toLocaleString()}</span>
                     </div>
-                    <h2 className="text-lg font-semibold leading-tight">{caso.tipo === 'CONSULTA' ? 'Consulta' : 'Reclamo'}: {caso.categoria}</h2>
-                    <div className="flex justify-between items-start text-sm text-muted-foreground">
-                        <p>Canal: <span className="font-medium text-foreground">{caso.canal}</span></p>
+                    <h2 className="text-xl font-bold tracking-tight text-foreground">{caso.tipo === 'CONSULTA' ? 'Consulta' : 'Reclamo'}: {caso.categoria}</h2>
+                    <div className="flex justify-between items-center text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                            <span>Canal:</span>
+                            <span className="font-semibold text-foreground bg-gray-100 px-2 py-0.5 rounded text-xs">{caso.canal}</span>
+                        </div>
                         {caso.asignadoA ? (
-                            <p className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">
+                            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
                                 Op: {caso.asignadoA}
-                            </p>
+                            </Badge>
                         ) : (
-                            <p className="text-xs text-orange-600 italic">Sin asignar</p>
+                            <span className="text-xs text-orange-600 font-medium italic bg-orange-50 px-2 py-1 rounded border border-orange-100">Sin asignar</span>
                         )}
                     </div>
                 </div>
 
                 {/* Affiliate Info - Compact */}
-                <Card className="bg-muted/20 border-none shadow-sm">
-                    <CardContent className="p-4 space-y-3">
-                        <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                                <User className="h-5 w-5 text-blue-600" />
+                <Card className="bg-white border-gray-200 shadow-sm overflow-hidden">
+                    <CardContent className="p-0">
+                        <div className="p-5 flex items-center gap-4 bg-gray-50/50">
+                            <div className="h-12 w-12 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                                <User className="h-6 w-6 text-white" />
                             </div>
                             <div>
-                                <p className="font-semibold text-sm">{caso.afiliado.nombre} {caso.afiliado.apellido}</p>
-                                <p className="text-xs text-muted-foreground">{caso.afiliado.documento}</p>
+                                <p className="font-bold text-base text-gray-900">{caso.afiliado.nombre} {caso.afiliado.apellido}</p>
+                                <p className="text-sm text-muted-foreground font-medium">{caso.afiliado.documento}</p>
                             </div>
                         </div>
-                        <Separator className="bg-border/50" />
-                        <div className="grid grid-cols-1 gap-2 text-xs">
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                                <Briefcase className="h-3.5 w-3.5" />
-                                <span className="text-foreground truncate">{caso.empleador}</span>
+                        <Separator />
+                        <div className="p-5 grid grid-cols-1 gap-3 text-sm">
+                            <div className="flex items-center gap-3 text-muted-foreground">
+                                <Briefcase className="h-4 w-4 text-blue-500" />
+                                <span className="text-gray-700 font-medium">{caso.empleador}</span>
                             </div>
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                                <Mail className="h-3.5 w-3.5" />
-                                <a href={`mailto:${caso.afiliado.email}`} className="text-blue-600 hover:underline truncate">{caso.afiliado.email}</a>
+                            <div className="flex items-center gap-3 text-muted-foreground">
+                                <Mail className="h-4 w-4 text-blue-500" />
+                                <a href={`mailto:${caso.afiliado.email}`} className="text-blue-600 hover:text-blue-700 underline font-medium">{caso.afiliado.email}</a>
                             </div>
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                                <Phone className="h-3.5 w-3.5" />
-                                <span>{caso.afiliado.telefono}</span>
+                            <div className="flex items-center gap-3 text-muted-foreground">
+                                <Phone className="h-4 w-4 text-blue-500" />
+                                <span className="text-gray-700 font-medium">{caso.afiliado.telefono}</span>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Description */}
-                <div>
-                    <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                        <FileText className="h-4 w-4" /> Descripción
+                <div className="space-y-3">
+                    <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-blue-600" /> Descripción
                     </h3>
-                    <div className="p-3 bg-muted/30 rounded-md border text-sm leading-relaxed whitespace-pre-wrap">
+                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap shadow-inner">
                         {caso.descripcion}
                     </div>
                 </div>
 
-                <Separator />
+                <Separator className="my-2" />
 
                 {/* History */}
-                <div className="space-y-4">
-                    <h3 className="text-sm font-semibold flex items-center gap-2">
-                        <MessageSquare className="h-4 w-4" /> Historial de Respuestas
+                <div className="space-y-6">
+                    <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <MessageSquare className="h-5 w-5 text-blue-600" /> Historial de Respuestas
                     </h3>
 
-                    <div className="space-y-3 pl-2 border-l-2 border-muted">
+                    <div className="space-y-5 pl-3 border-l-2 border-blue-100 ml-2">
                         {!caso.respuestas?.length && (
-                            <p className="text-xs text-muted-foreground italic pl-2">No hay respuestas aún.</p>
+                            <div className="py-4 text-center bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                                <p className="text-sm text-muted-foreground italic">No hay respuestas cargadas en este caso.</p>
+                            </div>
                         )}
                         {caso.respuestas?.map(resp => (
-                            <div key={resp.id} className="relative pl-4 pb-2">
-                                <div className="absolute -left-[21px] top-0 bg-background border border-muted rounded-full w-3 h-3 mt-1.5"></div>
-                                <div className="bg-card border rounded-lg p-3 text-sm shadow-sm">
-                                    <div className="flex justify-between items-start mb-1">
-                                        <span className="font-semibold text-xs text-primary">{resp.enviadoPor}</span>
-                                        <span className="text-[10px] text-muted-foreground">{new Date(resp.fecha).toLocaleString()}</span>
+                            <div key={resp.id} className="relative pl-6 pb-2">
+                                <div className="absolute -left-[23px] top-1 bg-white border-2 border-blue-400 rounded-full w-4 h-4 shadow-sm"></div>
+                                <div className="bg-white border border-gray-200 rounded-xl p-4 text-sm shadow-sm hover:shadow transition-shadow">
+                                    <div className="flex justify-between items-center mb-3">
+                                        <span className="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded text-xs">{resp.enviadoPor}</span>
+                                        <span className="text-[11px] text-muted-foreground font-medium">{new Date(resp.fecha).toLocaleString()}</span>
                                     </div>
-                                    <p className="text-foreground/90">{resp.texto}</p>
+                                    <p className="text-gray-700 leading-relaxed font-medium">{resp.texto}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-
-
                     {/* Reply Input */}
                     {caso.estado !== 'CERRADO' && (
-                        <div className="pt-2">
-                            <label className="text-xs font-medium mb-1.5 block">Nueva Respuesta</label>
+                        <div className="pt-6 border-t border-gray-100">
+                            <div className="flex items-center justify-between mb-3">
+                                <label className="text-sm font-bold text-gray-900 uppercase tracking-tight">Nueva Respuesta</label>
+                            </div>
 
-                            <div className="mb-2">
+                            <div className="mb-4">
                                 <Select
-                                    placeholder="Seleccionar plantilla..."
+                                    placeholder="Utilizar una plantilla..."
                                     options={PLANTILLAS_RESPUESTA}
                                     value=""
                                     onChange={(e) => {
                                         const val = e.target.value;
                                         if (val) setRespuesta(val);
                                     }}
-                                    className="text-xs h-8"
+                                    className="text-sm border-blue-100 focus:ring-blue-500 rounded-lg h-11"
                                 />
                             </div>
 
-                            <Textarea
-                                value={respuesta}
-                                onChange={e => setRespuesta(e.target.value)}
-                                placeholder="Escriba su respuesta aquí..."
-                                className="mb-2 min-h-[100px] text-sm resize-none"
-                            />
+                            <div className="relative group">
+                                <Textarea
+                                    value={respuesta}
+                                    onChange={e => setRespuesta(e.target.value)}
+                                    placeholder="Escriba aquí los detalles de la respuesta..."
+                                    className="mb-4 min-h-[140px] text-sm resize-none rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 p-4 transition-all"
+                                />
+                            </div>
                             <div className="flex justify-end">
-                                <Button size="sm" onClick={handleSendResponse} disabled={!respuesta.trim() || isSubmitting}>
+                                <Button
+                                    size="lg"
+                                    onClick={handleSendResponse}
+                                    disabled={!respuesta.trim() || isSubmitting}
+                                    className="rounded-full px-8 shadow-lg shadow-blue-500/20 active:scale-95 transition-transform"
+                                >
                                     {isSubmitting ? 'Enviando...' : (
                                         <>
-                                            <Send className="h-3.5 w-3.5 mr-2" /> Enviar
+                                            <Send className="h-4 w-4 mr-2" /> Enviar Respuesta
                                         </>
                                     )}
                                 </Button>
