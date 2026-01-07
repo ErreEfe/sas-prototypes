@@ -8,7 +8,8 @@ interface DrawerProps {
   title: string;
   children: ReactNode;
   footerContent?: ReactNode;
-  triggerRef: React.RefObject<HTMLElement>;
+  triggerRef?: React.RefObject<HTMLElement>;
+  className?: string;
 }
 
 const Drawer: React.FC<DrawerProps> = ({
@@ -18,6 +19,7 @@ const Drawer: React.FC<DrawerProps> = ({
   children,
   footerContent,
   triggerRef,
+  className,
 }) => {
   const drawerRef = useRef<HTMLDivElement>(null);
   const titleId = `drawer-title-${Math.random().toString(36).substring(2, 9)}`;
@@ -61,7 +63,7 @@ const Drawer: React.FC<DrawerProps> = ({
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      if (triggerRef.current) {
+      if (triggerRef?.current) {
         triggerRef.current.focus();
       }
     };
@@ -83,7 +85,7 @@ const Drawer: React.FC<DrawerProps> = ({
       <div
         ref={drawerRef}
         className={`fixed top-0 right-0 h-screen w-full max-w-lg bg-card text-card-foreground border-l border-border shadow-2xl z-[9999] flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
+          } ${className || ''}`}
         style={{ top: 0, margin: 0 }}
         role="dialog"
         aria-modal="true"

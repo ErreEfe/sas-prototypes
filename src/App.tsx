@@ -5,6 +5,7 @@ import { ToastProvider } from '@/core/contexts/ToastContext';
 // Prototypes
 import { SASIncapacidadesRoutes } from '@/prototypes/sas-incapacidades';
 import { FormulariosPublicosRoutes } from '@/prototypes/formularios-publicos';
+import { GestionConsultasRoutes } from '@/prototypes/gestion-consultas';
 
 import PrototypeSelector from './views/PrototypeSelector';
 
@@ -20,6 +21,9 @@ const App: React.FC = () => {
 
         {/* Public Forms Prototype */}
         <Route path="/formularios-publicos/*" element={<FormulariosPublicosRoutes />} />
+
+        {/* Management Tray Prototype */}
+        <Route path="/gestion-consultas/*" element={<GestionConsultasRoutes />} />
 
         {/* Catch-all redirect to Prototype Selector */}
         <Route path="*" element={<Navigate to="/" replace />} />
