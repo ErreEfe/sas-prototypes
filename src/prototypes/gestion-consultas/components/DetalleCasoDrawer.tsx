@@ -9,6 +9,8 @@ import { User, Phone, Mail, FileText, Send, Clock, XCircle, Briefcase, MessageSq
 import { Caso, EstadoCaso } from '../types';
 
 import { Select } from '@/core/components/ui/select';
+import ConfirmActionModal from '@/core/components/ConfirmActionModal';
+import SuccessDialog from '@/core/components/SuccessDialog';
 
 const PLANTILLAS_RESPUESTA = [
     { label: 'Recepción del caso', value: 'Estimado/a, hemos recibido su consulta y estamos analizando su caso. Le responderemos a la brevedad.' },
@@ -34,6 +36,8 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
 }) => {
     const [respuesta, setRespuesta] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isConfirmCloseOpen, setIsConfirmCloseOpen] = useState(false);
+    const [isSuccessOpen, setIsSuccessOpen] = useState(false);
 
     // Reset state when case changes or drawer opens
     useEffect(() => {
@@ -73,7 +77,11 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
                 Cerrar
             </Button>
             {caso.estado !== 'CERRADO' && (
-                <Button variant="destructive" onClick={() => onStateChange(caso.id, 'CERRADO')} className="bg-red-50 text-red-600 hover:bg-red-100 border-red-200 shadow-none">
+                <Button
+                    variant="destructive"
+                    onClick={() => setIsConfirmCloseOpen(true)}
+                    className="bg-red-50 text-red-600 hover:bg-red-100 border-red-200 shadow-none"
+                >
                     <XCircle className="mr-2 h-4 w-4" /> Cerrar Caso
                 </Button>
             )}
@@ -227,6 +235,28 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
                     )}
                 </div>
             </div>
+
+            <ConfirmActionModal
+                isOpen={isConfirmCloseOpen}
+                onClose={() => setIsConfirmCloseOpen(false)}
+                onConfirm={() => {
+                    onStateChange(caso.id, 'CERRADO');
+                    setIsSuccessOpen(true);
+                }}
+                title="¿Cerrar este caso?"
+                description="Una vez cerrado, no podrás agregar nuevas respuestas. Asegúrate de que la gestión haya finalizado correctamente."
+                confirmText="Sí, cerrar caso"
+                cancelText="Volver"
+                variant="destructive"
+            />
+
+            <SuccessDialog
+                isOpen={isSuccessOpen}
+                onConfirm={() => setIsSuccessOpen(false)}
+                title="Caso cerrado correctamente"
+                description={`El caso ${caso.id} ha sido finalizado y archivado.`}
+                buttonText="Entendido"
+            />
         </Drawer>
     );
 };
