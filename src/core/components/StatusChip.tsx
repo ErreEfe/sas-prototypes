@@ -16,7 +16,8 @@ export type Status =
   | 'Recibido'
   | 'En análisis'
   | 'Respondido'
-  | 'Cerrado';
+  | 'Cerrado'
+  | 'Derivado';
 
 interface StatusChipProps {
   status: Status;
@@ -80,6 +81,11 @@ const statusStyles: Record<Status, { bg: string; border: string; text: string }>
     bg: 'bg-gray-50',
     border: 'border-gray-400',
     text: 'text-gray-700',
+  },
+  'Derivado': {
+    bg: 'bg-indigo-50',
+    border: 'border-indigo-500',
+    text: 'text-indigo-700',
   },
   // Púrpura - Estados de liquidación
   'Preliquidado': {

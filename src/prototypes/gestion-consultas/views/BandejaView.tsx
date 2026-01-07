@@ -42,6 +42,7 @@ export const BandejaView = () => {
             case 'EN_ANALISIS': status = 'En análisis'; break;
             case 'RESPONDIDO': status = 'Respondido'; break;
             case 'CERRADO': status = 'Cerrado'; break;
+            case 'DERIVADO': status = 'Derivado'; break;
         }
         return <StatusChip status={status} />;
     };

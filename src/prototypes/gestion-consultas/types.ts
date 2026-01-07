@@ -1,6 +1,6 @@
 export type TipoCaso = 'CONSULTA' | 'RECLAMO';
 
-export type EstadoCaso = 'RECIBIDO' | 'EN_ANALISIS' | 'RESPONDIDO' | 'CERRADO';
+export type EstadoCaso = 'RECIBIDO' | 'EN_ANALISIS' | 'RESPONDIDO' | 'CERRADO' | 'DERIVADO';
 
 export type CanalIngreso = 'WEB_FORM' | 'EMAIL' | 'TELEFONO';
 

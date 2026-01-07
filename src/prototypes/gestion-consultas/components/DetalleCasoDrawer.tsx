@@ -10,7 +10,9 @@ import { Caso, EstadoCaso } from '../types';
 
 import { Select } from '@/core/components/ui/select';
 import ConfirmActionModal from '@/core/components/ConfirmActionModal';
+import DerivarCasoModal from './DerivarCasoModal';
 import { useToast } from '@/core/contexts/ToastContext';
+import { Forward } from 'lucide-react';
 
 const PLANTILLAS_RESPUESTA = [
     { label: 'Recepción del caso', value: 'Estimado/a, hemos recibido su consulta y estamos analizando su caso. Le responderemos a la brevedad.' },
@@ -37,6 +39,7 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
     const [respuesta, setRespuesta] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isConfirmCloseOpen, setIsConfirmCloseOpen] = useState(false);
+    const [isDerivarModalOpen, setIsDerivarModalOpen] = useState(false);
     const { addToast } = useToast();
 
     // Reset state when case changes or drawer opens
@@ -67,6 +70,7 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
             case 'EN_ANALISIS': return 'default';
             case 'RESPONDIDO': return 'outline';
             case 'CERRADO': return 'outline';
+            case 'DERIVADO': return 'secondary';
             default: return 'default';
         }
     };
@@ -77,13 +81,22 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
                 Cerrar
             </Button>
             {caso.estado !== 'CERRADO' && (
-                <Button
-                    variant="destructive"
-                    onClick={() => setIsConfirmCloseOpen(true)}
-                    className="bg-red-50 text-red-600 hover:bg-red-100 border-red-200 shadow-none"
-                >
-                    <XCircle className="mr-2 h-4 w-4" /> Cerrar Caso
-                </Button>
+                <>
+                    <Button
+                        variant="outline"
+                        onClick={() => setIsDerivarModalOpen(true)}
+                        className="border-blue-200 text-blue-600 hover:bg-blue-50"
+                    >
+                        <Forward className="mr-2 h-4 w-4" /> Derivar
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        onClick={() => setIsConfirmCloseOpen(true)}
+                        className="bg-red-50 text-red-600 hover:bg-red-100 border-red-200 shadow-none"
+                    >
+                        <XCircle className="mr-2 h-4 w-4" /> Cerrar Caso
+                    </Button>
+                </>
             )}
         </div>
     );
@@ -237,6 +250,15 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
                     </div>
                 </div>
             </Drawer>
+
+            <DerivarCasoModal
+                isOpen={isDerivarModalOpen}
+                onClose={() => setIsDerivarModalOpen(false)}
+                onConfirm={(data) => {
+                    onStateChange(caso.id, 'DERIVADO');
+                    addToast(`Caso ${caso.id} derivado a ${data.area}${data.gestor ? ` (Gestor: ${data.gestor})` : ''} correctamente`, 'success');
+                }}
+            />
 
             <ConfirmActionModal
                 isOpen={isConfirmCloseOpen}
