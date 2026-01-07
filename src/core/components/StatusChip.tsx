@@ -11,7 +11,12 @@ export type Status =
   | 'Finalizada'
   | 'Preliquidado'
   | 'Pagada'
-  | 'Con Informe';
+  | 'Con Informe'
+  // Estados para Consultas y Reclamos
+  | 'Recibido'
+  | 'En análisis'
+  | 'Respondido'
+  | 'Cerrado';
 
 interface StatusChipProps {
   status: Status;
@@ -26,8 +31,18 @@ const statusStyles: Record<Status, { bg: string; border: string; text: string }>
     border: 'border-amber-500',
     text: 'text-amber-700',
   },
+  'Recibido': {
+    bg: 'bg-amber-50',
+    border: 'border-amber-500',
+    text: 'text-amber-700',
+  },
   // Verde - Estados aprobados o exitosos
   'Aprobado': {
+    bg: 'bg-green-50',
+    border: 'border-green-500',
+    text: 'text-green-700',
+  },
+  'Respondido': {
     bg: 'bg-green-50',
     border: 'border-green-500',
     text: 'text-green-700',
@@ -50,8 +65,18 @@ const statusStyles: Record<Status, { bg: string; border: string; text: string }>
     border: 'border-blue-500',
     text: 'text-blue-700',
   },
+  'En análisis': {
+    bg: 'bg-blue-50',
+    border: 'border-blue-500',
+    text: 'text-blue-700',
+  },
   // Gris - Estados finalizados o neutros
   'Finalizada': {
+    bg: 'bg-gray-50',
+    border: 'border-gray-400',
+    text: 'text-gray-700',
+  },
+  'Cerrado': {
     bg: 'bg-gray-50',
     border: 'border-gray-400',
     text: 'text-gray-700',

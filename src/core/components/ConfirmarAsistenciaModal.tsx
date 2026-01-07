@@ -47,7 +47,7 @@ const ConfirmarAsistenciaModal: React.FC<ConfirmarAsistenciaModalProps> = ({
       aria-modal="true"
       aria-labelledby="confirm-modal-title"
     >
-      <div className="bg-surface rounded-2xl shadow-2xl p-8 max-w-md w-full">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
         <h2
           id="confirm-modal-title"
           className="text-2xl font-bold text-primary-dark mb-2"

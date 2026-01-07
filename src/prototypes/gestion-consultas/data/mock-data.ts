@@ -2,7 +2,7 @@ import { Caso } from '../types';
 
 export const CASOS_MOCK: Caso[] = [
     {
-        id: 'CAS-2024-001',
+        id: '2024-001',
         tipo: 'CONSULTA',
         estado: 'RECIBIDO',
         fechaIngreso: '2024-03-10T09:30:00Z',
@@ -21,7 +21,7 @@ export const CASOS_MOCK: Caso[] = [
         canal: 'WEB_FORM'
     },
     {
-        id: 'CAS-2024-002',
+        id: '2024-002',
         tipo: 'RECLAMO',
         estado: 'EN_ANALISIS',
         fechaIngreso: '2024-03-09T14:15:00Z',
@@ -41,7 +41,7 @@ export const CASOS_MOCK: Caso[] = [
         asignadoA: 'operador1'
     },
     {
-        id: 'CAS-2024-003',
+        id: '2024-003',
         tipo: 'CONSULTA',
         estado: 'RESPONDIDO',
         fechaIngreso: '2024-03-08T11:00:00Z',
@@ -63,12 +63,12 @@ export const CASOS_MOCK: Caso[] = [
                 id: 'RESP-001',
                 fecha: '2024-03-08T15:00:00Z',
                 texto: 'Estimado Carlos, el pago se acreditará el día 15/03. Saludos.',
-                enviadoPor: 'operador2@sas.com'
+                enviadoPor: 'Eduardo Romano'
             }
         ]
     },
     {
-        id: 'CAS-2024-004',
+        id: '2024-004',
         tipo: 'RECLAMO',
         estado: 'CERRADO',
         fechaIngreso: '2024-03-01T10:00:00Z',
@@ -96,7 +96,7 @@ export const CASOS_MOCK: Caso[] = [
         ]
     },
     {
-        id: 'CAS-2024-005',
+        id: '2024-005',
         tipo: 'CONSULTA',
         estado: 'RECIBIDO',
         fechaIngreso: '2024-03-11T08:00:00Z',

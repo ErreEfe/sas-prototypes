@@ -5,6 +5,8 @@ import { Input } from '@/core/components/ui/input';
 import { Select } from '@/core/components/ui/select';
 import { Button } from '@/core/components/ui/button';
 import { Badge } from '@/core/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/core/components/ui/tabs';
+import StatusChip, { Status } from '@/core/components/StatusChip';
 import { CASOS_MOCK } from '../data/mock-data';
 import { Caso, EstadoCaso, TipoCaso } from '../types';
 import { Eye, Briefcase, User as UserIcon } from 'lucide-react';
@@ -13,7 +15,7 @@ import { DetalleCasoDrawer } from '../components/DetalleCasoDrawer';
 export const BandejaView = () => {
     // const navigate = useNavigate(); // Removed navigation to detailed view
     const [casos, setCasos] = useState<Caso[]>(CASOS_MOCK);
-    const [filterTipo, setFilterTipo] = useState<TipoCaso | ''>('');
+    const [filterTipo, setFilterTipo] = useState<TipoCaso>('CONSULTA');
     const [filterEstado, setFilterEstado] = useState<EstadoCaso | ''>('');
     const [filterEmpleador, setFilterEmpleador] = useState('');
 
@@ -33,14 +35,15 @@ export const BandejaView = () => {
             .sort((a, b) => new Date(b.fechaIngreso).getTime() - new Date(a.fechaIngreso).getTime());
     }, [casos, filterTipo, filterEstado, filterEmpleador]);
 
-    const getStatusBadgeVariant = (estado: EstadoCaso) => {
+    const renderStatusChip = (estado: EstadoCaso) => {
+        let status: Status = 'Recibido';
         switch (estado) {
-            case 'RECIBIDO': return 'secondary';
-            case 'EN_ANALISIS': return 'default'; // blue-ish usually
-            case 'RESPONDIDO': return 'outline'; // green maybe? using outline for now or could customize
-            case 'CERRADO': return 'outline';
-            default: return 'default';
+            case 'RECIBIDO': status = 'Recibido'; break;
+            case 'EN_ANALISIS': status = 'En análisis'; break;
+            case 'RESPONDIDO': status = 'Respondido'; break;
+            case 'CERRADO': status = 'Cerrado'; break;
         }
+        return <StatusChip status={status} />;
     };
 
     const getStatusLabel = (estado: EstadoCaso) => {
@@ -72,7 +75,7 @@ export const BandejaView = () => {
             id: `RESP-${Date.now()}`,
             fecha: new Date().toISOString(),
             texto: textoRespuesta,
-            enviadoPor: 'eduardo.romano@sas.com'
+            enviadoPor: 'Eduardo Romano'
         };
 
         setCasos(prevCasos => prevCasos.map(c => {
@@ -106,21 +109,26 @@ export const BandejaView = () => {
                 </div>
             </div>
 
+            <Tabs value={filterTipo} onValueChange={(val) => setFilterTipo(val as TipoCaso)} className="mb-6">
+                <TabsList className="bg-white border p-1 h-auto gap-1">
+                    <TabsTrigger
+                        value="CONSULTA"
+                        className="rounded-md px-8 py-2.5 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all font-semibold"
+                    >
+                        CONSULTAS
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="RECLAMO"
+                        className="rounded-md px-8 py-2.5 data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all font-semibold"
+                    >
+                        RECLAMOS
+                    </TabsTrigger>
+                </TabsList>
+            </Tabs>
+
             <div className="bg-card rounded-lg border shadow-sm p-4 mb-6 space-y-4">
                 <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Filtros</h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="space-y-1">
-                        <label className="text-sm font-medium">Tipo</label>
-                        <Select
-                            options={[
-                                { label: 'Todos', value: '' },
-                                { label: 'Consulta', value: 'CONSULTA' },
-                                { label: 'Reclamo', value: 'RECLAMO' }
-                            ]}
-                            value={filterTipo}
-                            onChange={(e) => setFilterTipo(e.target.value as TipoCaso | '')}
-                        />
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-1">
                         <label className="text-sm font-medium">Estado</label>
                         <Select
@@ -135,7 +143,7 @@ export const BandejaView = () => {
                             onChange={(e) => setFilterEstado(e.target.value as EstadoCaso | '')}
                         />
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                         <label className="text-sm font-medium">Empleador</label>
                         <Input
                             placeholder="Buscar empresa..."
@@ -151,8 +159,7 @@ export const BandejaView = () => {
                 <Table>
                     <TableHeader>
                         <TableRow className="bg-muted/50">
-                            <TableHead className="w-[120px]">Nº Gestión</TableHead>
-                            <TableHead className="w-[100px]">Tipo</TableHead>
+                            <TableHead className="w-[100px] text-center">Nº</TableHead>
                             <TableHead>Empleador</TableHead>
                             <TableHead>Afiliado</TableHead>
                             <TableHead>Categoría</TableHead>
@@ -164,14 +171,7 @@ export const BandejaView = () => {
                     <TableBody>
                         {sortedAndFilteredCasos.map((caso) => (
                             <TableRow key={caso.id} className="hover:bg-muted/30">
-                                <TableCell className="font-medium text-xs">{caso.id}</TableCell>
-                                <TableCell>
-                                    {caso.tipo === 'RECLAMO' ? (
-                                        <span className="text-destructive font-bold text-xs">RECLAMO</span>
-                                    ) : (
-                                        <span className="text-blue-600 font-bold text-xs">CONSULTA</span>
-                                    )}
-                                </TableCell>
+                                <TableCell className="font-bold text-center text-sm text-blue-600">{caso.id}</TableCell>
                                 <TableCell className="text-sm flex items-center gap-2">
                                     <Briefcase className="w-3 h-3 text-muted-foreground" />
                                     {caso.empleador}
@@ -184,9 +184,7 @@ export const BandejaView = () => {
                                 </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">{caso.categoria}</TableCell>
                                 <TableCell>
-                                    <Badge variant={getStatusBadgeVariant(caso.estado)}>
-                                        {getStatusLabel(caso.estado)}
-                                    </Badge>
+                                    {renderStatusChip(caso.estado)}
                                 </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">
                                     {new Date(caso.fechaIngreso).toLocaleDateString()} <br />
