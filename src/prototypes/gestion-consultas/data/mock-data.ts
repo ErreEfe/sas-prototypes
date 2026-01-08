@@ -18,7 +18,7 @@ export const CASOS_MOCK: Caso[] = [
         },
         categoria: 'Estado del siniestro',
         descripcion: 'Quisiera saber en qué estado se encuentra mi trámite de siniestro Nº 12345, ya que no he recibido novedades.',
-        canal: 'WEB_FORM'
+        canal: 'PORTAL_EMPLEADOR'
     },
     {
         id: '2024-002',
@@ -37,7 +37,7 @@ export const CASOS_MOCK: Caso[] = [
         },
         categoria: 'Demora en atención',
         descripcion: 'Me presenté en la clínica asignada y me informaron que no tenían la autorización. Perdí el día de trabajo.',
-        canal: 'WEB_FORM',
+        canal: 'MESA_ENTRADA',
         asignadoA: 'operador1'
     },
     {

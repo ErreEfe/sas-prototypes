@@ -9,19 +9,21 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/core/components/ui/t
 import StatusChip, { Status } from '@/core/components/StatusChip';
 import { CASOS_MOCK } from '../data/mock-data';
 import { Caso, EstadoCaso, TipoCaso } from '../types';
-import { Eye, Briefcase, User as UserIcon } from 'lucide-react';
+import { Eye, Briefcase, User as UserIcon, PlusCircle, Headphones, Mail, User, FileText, Globe } from 'lucide-react';
 import { DetalleCasoDrawer } from '../components/DetalleCasoDrawer';
+import { NuevaGestionDrawer } from '../components/NuevaGestionDrawer';
 
 export const BandejaView = () => {
     // const navigate = useNavigate(); // Removed navigation to detailed view
     const [casos, setCasos] = useState<Caso[]>(CASOS_MOCK);
-    const [filterTipo, setFilterTipo] = useState<TipoCaso>('CONSULTA');
+    const [filterTipo, setFilterTipo] = useState<TipoCaso | ''>('');
     const [filterEstado, setFilterEstado] = useState<EstadoCaso | ''>('');
     const [filterEmpleador, setFilterEmpleador] = useState('');
 
     // Drawer State
     const [selectedCaso, setSelectedCaso] = useState<Caso | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isNewModalOpen, setIsNewModalOpen] = useState(false);
 
     // Sort by date desc by default
     const sortedAndFilteredCasos = useMemo(() => {
@@ -47,8 +49,42 @@ export const BandejaView = () => {
         return <StatusChip status={status} />;
     };
 
+    const getCorrelativeNumber = (caso: Caso) => {
+        // Find all cases for this employer and sort them by date ascending
+        const employerCases = casos
+            .filter(c => c.empleador === caso.empleador)
+            .sort((a, b) => new Date(a.fechaIngreso).getTime() - new Date(b.fechaIngreso).getTime());
+
+        const index = employerCases.findIndex(c => c.id === caso.id);
+        return index + 1;
+    };
+
     const getStatusLabel = (estado: EstadoCaso) => {
         return estado.replace('_', ' ');
+    };
+
+    const getChannelIcon = (canal: string) => {
+        switch (canal) {
+            case 'WEB_FORM': return <Globe className="w-3 h-3" />;
+            case 'EMAIL': return <Mail className="w-3 h-3" />;
+            case 'TELEFONO': return <Headphones className="w-3 h-3" />;
+            case 'MESA_ENTRADA': return <User className="w-3 h-3" />;
+            case 'PORTAL_EMPLEADOR': return <Briefcase className="w-3 h-3" />;
+            case 'CARTA_DOCUMENTO': return <FileText className="w-3 h-3" />;
+            default: return null;
+        }
+    };
+
+    const getChannelLabel = (canal: string) => {
+        switch (canal) {
+            case 'WEB_FORM': return 'Web';
+            case 'EMAIL': return 'Email';
+            case 'TELEFONO': return 'Teléfono';
+            case 'MESA_ENTRADA': return 'Mesa Entrada';
+            case 'PORTAL_EMPLEADOR': return 'Portal';
+            case 'CARTA_DOCUMENTO': return 'C. Doc.';
+            default: return canal;
+        }
     };
 
     // Handlers for Drawer interactions
@@ -110,22 +146,6 @@ export const BandejaView = () => {
                 </div>
             </div>
 
-            <Tabs value={filterTipo} onValueChange={(val) => setFilterTipo(val as TipoCaso)} className="mb-6">
-                <TabsList className="bg-white border p-1 h-auto gap-1">
-                    <TabsTrigger
-                        value="CONSULTA"
-                        className="rounded-md px-8 py-2.5 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all font-semibold"
-                    >
-                        CONSULTAS
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="RECLAMO"
-                        className="rounded-md px-8 py-2.5 data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all font-semibold"
-                    >
-                        RECLAMOS
-                    </TabsTrigger>
-                </TabsList>
-            </Tabs>
 
             <div className="bg-card rounded-lg border shadow-sm p-4 mb-6 space-y-4">
                 <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Filtros</h2>
@@ -144,6 +164,18 @@ export const BandejaView = () => {
                             onChange={(e) => setFilterEstado(e.target.value as EstadoCaso | '')}
                         />
                     </div>
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Tipo</label>
+                        <Select
+                            options={[
+                                { label: 'Todos', value: '' },
+                                { label: 'Consultas', value: 'CONSULTA' },
+                                { label: 'Reclamos', value: 'RECLAMO' }
+                            ]}
+                            value={filterTipo}
+                            onChange={(e) => setFilterTipo(e.target.value as TipoCaso | '')}
+                        />
+                    </div>
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Empleador</label>
                         <Input
@@ -152,8 +184,16 @@ export const BandejaView = () => {
                             onChange={(e) => setFilterEmpleador(e.target.value)}
                         />
                     </div>
-                    {/* Placeholder for date range if needed */}
                 </div>
+            </div>
+
+            <div className="flex justify-between items-center mb-4">
+                <div className="text-sm text-muted-foreground">
+                    Mostrando <span className="font-bold text-foreground">{sortedAndFilteredCasos.length}</span> trámites en total
+                </div>
+                <Button onClick={() => setIsNewModalOpen(true)} className="bg-blue-600 hover:bg-blue-700 shadow-lg transform active:scale-95 transition-all rounded-full px-6">
+                    <PlusCircle className="mr-2 h-4 w-4" /> Nueva consulta
+                </Button>
             </div>
 
             <div className="rounded-md border bg-white overflow-hidden">
@@ -161,9 +201,11 @@ export const BandejaView = () => {
                     <TableHeader>
                         <TableRow className="bg-muted/50">
                             <TableHead className="w-[100px] text-center">Nº</TableHead>
+                            <TableHead>Tipo</TableHead>
                             <TableHead>Empleador</TableHead>
                             <TableHead>Afiliado</TableHead>
                             <TableHead>Categoría</TableHead>
+                            <TableHead>Canal</TableHead>
                             <TableHead>Estado</TableHead>
                             <TableHead>Fecha</TableHead>
                             <TableHead className="text-right">Acciones</TableHead>
@@ -172,7 +214,17 @@ export const BandejaView = () => {
                     <TableBody>
                         {sortedAndFilteredCasos.map((caso) => (
                             <TableRow key={caso.id} className="hover:bg-muted/30">
-                                <TableCell className="font-bold text-center text-sm text-blue-600">{caso.id}</TableCell>
+                                <TableCell className="font-bold text-center text-sm text-blue-600">
+                                    #{getCorrelativeNumber(caso)}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter ${caso.tipo === 'RECLAMO'
+                                        ? 'bg-red-100 text-red-700 border border-red-200'
+                                        : 'bg-blue-100 text-blue-700 border border-blue-200'
+                                        }`}>
+                                        {caso.tipo}
+                                    </span>
+                                </TableCell>
                                 <TableCell className="text-sm flex items-center gap-2">
                                     <Briefcase className="w-3 h-3 text-muted-foreground" />
                                     {caso.empleador}
@@ -184,6 +236,12 @@ export const BandejaView = () => {
                                     </div>
                                 </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">{caso.categoria}</TableCell>
+                                <TableCell>
+                                    <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground bg-gray-50 px-2 py-1 rounded-md border w-fit">
+                                        {getChannelIcon(caso.canal)}
+                                        {getChannelLabel(caso.canal)}
+                                    </div>
+                                </TableCell>
                                 <TableCell>
                                     {renderStatusChip(caso.estado)}
                                 </TableCell>
@@ -255,8 +313,22 @@ export const BandejaView = () => {
                 isOpen={isDrawerOpen}
                 onClose={handleCloseDrawer}
                 caso={selectedCaso}
+                correlativeNumber={selectedCaso ? getCorrelativeNumber(selectedCaso) : undefined}
                 onStateChange={handleStateChange}
                 onAddResponse={handleAddResponse}
+            />
+
+            <NuevaGestionDrawer
+                isOpen={isNewModalOpen}
+                onClose={() => setIsNewModalOpen(false)}
+                onSave={(data) => {
+                    const newId = `${new Date().getFullYear()}-${String(casos.length + 1).padStart(3, '0')}`;
+                    const completo: Caso = {
+                        ...data as Caso,
+                        id: newId
+                    };
+                    setCasos([completo, ...casos]);
+                }}
             />
         </div>
     );

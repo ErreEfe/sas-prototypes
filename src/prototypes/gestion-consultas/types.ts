@@ -2,7 +2,7 @@ export type TipoCaso = 'CONSULTA' | 'RECLAMO';
 
 export type EstadoCaso = 'RECIBIDO' | 'EN_ANALISIS' | 'RESPONDIDO' | 'CERRADO' | 'DERIVADO';
 
-export type CanalIngreso = 'WEB_FORM' | 'EMAIL' | 'TELEFONO';
+export type CanalIngreso = 'WEB_FORM' | 'EMAIL' | 'TELEFONO' | 'MESA_ENTRADA' | 'PORTAL_EMPLEADOR' | 'CARTA_DOCUMENTO';
 
 export interface Afiliado {
     id: string;
@@ -25,6 +25,7 @@ export interface Caso {
     descripcion: string;
     canal: CanalIngreso;
     asignadoA?: string;
+    ingresadoPor?: string;
     comentariosInternos?: ComentarioInterno[];
     respuestas?: Respuesta[];
 }

@@ -25,6 +25,7 @@ interface DetalleCasoDrawerProps {
     isOpen: boolean;
     onClose: () => void;
     caso: Caso | null;
+    correlativeNumber?: number;
     onStateChange: (casoId: string, newState: EstadoCaso) => void;
     onAddResponse: (casoId: string, respuesta: string) => void;
 }
@@ -33,6 +34,7 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
     isOpen,
     onClose,
     caso,
+    correlativeNumber,
     onStateChange,
     onAddResponse
 }) => {
@@ -101,12 +103,24 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
         </div>
     );
 
+    const getChannelLabel = (channel: string) => {
+        switch (channel) {
+            case 'WEB_FORM': return 'Formulario Web';
+            case 'EMAIL': return 'Correo Electrónico';
+            case 'TELEFONO': return 'Teléfono';
+            case 'MESA_ENTRADA': return 'Mesa de Entrada';
+            case 'PORTAL_EMPLEADOR': return 'Portal Empleador';
+            case 'CARTA_DOCUMENTO': return 'Carta Documento';
+            default: return channel;
+        }
+    };
+
     return (
         <>
             <Drawer
                 isOpen={isOpen}
                 onClose={onClose}
-                title={`Caso ${caso.id}`}
+                title={`Gestión #${correlativeNumber || caso.id}`}
                 footerContent={footer}
                 className="w-full sm:max-w-xl" // Make it a bit wider than default if possible
             >
@@ -122,8 +136,8 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
                         <h2 className="text-xl font-bold tracking-tight text-foreground">{caso.tipo === 'CONSULTA' ? 'Consulta' : 'Reclamo'}: {caso.categoria}</h2>
                         <div className="flex justify-between items-center text-sm">
                             <div className="flex items-center gap-2 text-muted-foreground">
-                                <span>Canal:</span>
-                                <span className="font-semibold text-foreground bg-gray-100 px-2 py-0.5 rounded text-xs">{caso.canal}</span>
+                                <span>Canal de Ingreso:</span>
+                                <span className="font-semibold text-foreground bg-gray-100 px-2 py-0.5 rounded text-xs">{getChannelLabel(caso.canal)}</span>
                             </div>
                             {caso.asignadoA ? (
                                 <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
@@ -256,7 +270,7 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
                 onClose={() => setIsDerivarModalOpen(false)}
                 onConfirm={(data) => {
                     onStateChange(caso.id, 'DERIVADO');
-                    addToast(`Caso ${caso.id} derivado a ${data.area}${data.gestor ? ` (Gestor: ${data.gestor})` : ''} correctamente`, 'success');
+                    addToast(`Gestión #${correlativeNumber || caso.id} derivada a ${data.area}${data.gestor ? ` (Gestor: ${data.gestor})` : ''} correctamente`, 'success');
                 }}
             />
 
@@ -265,7 +279,7 @@ export const DetalleCasoDrawer: React.FC<DetalleCasoDrawerProps> = ({
                 onClose={() => setIsConfirmCloseOpen(false)}
                 onConfirm={() => {
                     onStateChange(caso.id, 'CERRADO');
-                    addToast(`El caso ${caso.id} ha sido cerrado correctamente`, 'success');
+                    addToast(`La gestión #${correlativeNumber || caso.id} ha sido cerrada correctamente`, 'success');
                 }}
                 title="¿Cerrar este caso?"
                 description="Una vez cerrado, no podrás agregar nuevas respuestas. Asegúrate de que la gestión haya finalizado correctamente."
