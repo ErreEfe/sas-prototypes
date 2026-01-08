@@ -8,6 +8,16 @@ export interface AffiliateData {
     email: string;
 }
 
+export type TipoTramite = 'CONSULTA' | 'RECLAMO';
+
+export interface UnifiedFormData extends AffiliateData {
+    tipoTramite: TipoTramite;
+    motivo: string;
+    descripcion: string;
+    numeroSiniestro?: string;
+    adjuntos?: File[];
+}
+
 export interface ConsultaData extends AffiliateData {
     tipoConsulta: string;
     descripcion: string;
