@@ -9,7 +9,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/core/components/ui/t
 import StatusChip, { Status } from '@/core/components/StatusChip';
 import { CASOS_MOCK } from '../data/mock-data';
 import { Caso, EstadoCaso, TipoCaso } from '../types';
-import { Eye, Briefcase, User as UserIcon, PlusCircle, Headphones, Mail, User, FileText, Globe } from 'lucide-react';
+import { Eye, Briefcase, User as UserIcon, PlusCircle, Headphones, Mail, User, FileText, Globe, Hand } from 'lucide-react';
+import { IconButton } from '@/core/components/ui/icon-button';
 import { DetalleCasoDrawer } from '../components/DetalleCasoDrawer';
 import { NuevaGestionDrawer } from '../components/NuevaGestionDrawer';
 
@@ -83,6 +84,7 @@ export const BandejaView = () => {
             case 'MESA_ENTRADA': return 'Mesa Entrada';
             case 'PORTAL_EMPLEADOR': return 'Portal';
             case 'CARTA_DOCUMENTO': return 'C. Doc.';
+            case 'TRAMITADORES': return 'Tramitadores';
             default: return canal;
         }
     };
@@ -218,10 +220,7 @@ export const BandejaView = () => {
                                     #{getCorrelativeNumber(caso)}
                                 </TableCell>
                                 <TableCell className="text-center">
-                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter ${caso.tipo === 'RECLAMO'
-                                        ? 'bg-red-100 text-red-700 border border-red-200'
-                                        : 'bg-blue-100 text-blue-700 border border-blue-200'
-                                        }`}>
+                                    <span className={`text-xs font-bold uppercase ${caso.tipo === 'RECLAMO' ? 'text-red-600' : 'text-blue-600'}`}>
                                         {caso.tipo}
                                     </span>
                                 </TableCell>
@@ -252,11 +251,12 @@ export const BandejaView = () => {
                                 <TableCell className="text-right">
                                     <div className="flex items-center justify-end gap-1">
                                         {!caso.asignadoA && (
-                                            <Button
-                                                variant="ghost"
+                                            <IconButton
+                                                variant="outline"
                                                 size="sm"
-                                                className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                                className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 hover:border-blue-200"
                                                 title="Tomar Caso"
+                                                icon={<Hand className="w-4 h-4" />}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleStateChange(caso.id, 'EN_ANALISIS');
@@ -265,32 +265,16 @@ export const BandejaView = () => {
                                                     // Also update selected if open
                                                     setSelectedCaso(prev => prev && prev.id === caso.id ? { ...prev, asignadoA: 'Eduardo Romano', estado: 'EN_ANALISIS' } : prev);
                                                 }}
-                                            >
-                                                <div className="sr-only">Tomar caso</div>
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="w-4 h-4"
-                                                >
-                                                    <path d="M12 6v6l4 2" />
-                                                    <circle cx="12" cy="12" r="10" />
-                                                </svg>
-                                            </Button>
+                                            />
                                         )}
-                                        <Button
-                                            variant="ghost"
+                                        <IconButton
+                                            variant="outline"
                                             size="sm"
-                                            className="h-8 w-8 p-0"
+                                            className="h-8 w-8 text-muted-foreground hover:text-primary hover:border-primary"
+                                            title="Ver detalle"
+                                            icon={<Eye className="h-4 w-4" />}
                                             onClick={() => handleViewDetails(caso)}
-                                        >
-                                            <Eye className="h-4 w-4 text-muted-foreground" />
-                                            <span className="sr-only">Ver detalle</span>
-                                        </Button>
+                                        />
                                     </div>
                                 </TableCell>
                             </TableRow>

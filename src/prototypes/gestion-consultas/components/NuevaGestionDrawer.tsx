@@ -208,7 +208,8 @@ export const NuevaGestionDrawer: React.FC<NuevaGestionDrawerProps> = ({ isOpen, 
                                         { label: 'Mesa de Entrada', value: 'MESA_ENTRADA' },
                                         { label: 'Correo Electrónico', value: 'EMAIL' },
                                         { label: 'Portal Empleador', value: 'PORTAL_EMPLEADOR' },
-                                        { label: 'Carta Documento', value: 'CARTA_DOCUMENTO' }
+                                        { label: 'Carta Documento', value: 'CARTA_DOCUMENTO' },
+                                        { label: 'Tramitadores', value: 'TRAMITADORES' }
                                     ]}
                                     value={values.canal}
                                     onChange={(e) => handleChange('canal', e.target.value)}
